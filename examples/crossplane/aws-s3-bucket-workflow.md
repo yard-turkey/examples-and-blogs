@@ -10,7 +10,7 @@ control plane.
 1. [Create Resource Class](#create-resource-class)
 1. [Create Resource Claim](#create-resource-claim)
 1. [Create Photo Application](#create-photo-application)
-
+1. [Troubleshooting](#Troubleshooting)
 
 ### Assumptions
 This example assumes some familiarity with Kubernetes and AWS and the following is available to use:
@@ -122,7 +122,8 @@ spec:
 
 
 ### Create Photo Application
-Now we will use the S3 Bucket we just provisioned by creating a demo photo application and running it in our cluster.
+Now we will use the S3 Bucket we just provisioned by creating a [demo photo application](https://github.com/yard-turkey/gallery-demo) and running it in our cluster.
+This demo application is a simple web app that displays and uploads pictures into the S3 Bucket.
 
 1. After the bucket is created, a secret is also created from the provisioner, this secret holds the bucket
 connection information such as endpoint, user and password. We will need this secret to run our app pod.
@@ -150,12 +151,12 @@ spec:
     - name: BUCKET_ID [2]
       valueFrom:
             secretKeyRef:
-              name: my-bucket
+              name: my-bucket [4]
               key: username
-    - name: BUCKET_PWORD [2]
+    - name: BUCKET_PWORD [3]
       valueFrom:
             secretKeyRef:
-              name: my-bucket
+              name: my-bucket [4]
               key: password
     - name: OBJECT_STORAGE_S3_TYPE
       value: "aws"
@@ -170,8 +171,10 @@ spec:
     - containerPort: 3000
       protocol: TCP
 ```
-1. Name of the bucket that was provisioned
-1. Using the generated secret to get the proper credentials
+1. Name of the bucket we created
+1. AWS S3 UserName (access_key)
+1. AWS S3 Password (access_secret_key)
+1. The auto generated secret that was created by Crossplane provisioner
 
 Lastly, expose the pod as a service so you can access the url from a browser. In this example,
 I exposed as a LoadBalancer
@@ -187,8 +190,13 @@ To access via a url use the EXTERNAL-IP
   NAME                         TYPE           CLUSTER-IP       EXTERNAL-IP                                                               PORT(S)          AGE
   photo1                       LoadBalancer   100.66.124.105   a00c53ccb3c5411e9b6550a7c0e50a2a-2010797808.us-east-1.elb.amazonaws.com   3000:32344/TCP   6d
 ```
- 
 
+### Troubleshooting
+This is most likely going to change as there are currently efforts underway to improve logging and user experience. But check the provider resource for errors - like permission issues, etc...
 
+You can also check the logs of the operator - but as stated, those are pretty vanilla right now, so best approach is to step through each object and check status.
 
-
+- Provider - any errors?
+- Resource Class
+- Resource Claim
+- Generated secret?
