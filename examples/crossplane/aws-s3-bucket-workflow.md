@@ -197,11 +197,12 @@ This is most likely going to change as there are currently efforts underway to i
 You can also check the logs of the operator - but as stated, those are pretty vanilla right now, so best approach is to step through each object and check status.
 
 - Provider - any errors?
-- Resource Class
-- Resource Claim
+- Resource Class?
+- Resource Claim?
 - Generated secret?
+- provisioner class?
 
-For example, run below command and look for the status section of the output
+For example, run below command to examine the s3buckets provisioner and look for the status section of the output
 ```
  # kubectl -n crossplane-system get s3buckets.storage.aws.crossplane.io -o yaml
  ...
