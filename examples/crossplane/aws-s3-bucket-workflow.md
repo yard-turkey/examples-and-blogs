@@ -200,3 +200,22 @@ You can also check the logs of the operator - but as stated, those are pretty va
 - Resource Class
 - Resource Claim
 - Generated secret?
+
+For example, run below command and look for the status section of the output
+```
+ # kubectl -n crossplane-system get s3buckets.storage.aws.crossplane.io -o yaml
+ ...
+ ...
+   status:
+    Conditions:
+    - LastTransitionTime: "2019-03-15T17:17:59Z"
+      Message: "BucketAlreadyExists: The requested bucket name is not available. The
+        bucket namespace is shared by all users of the system. Please select a different
+        name and try again.\n\tstatus code: 409, request id: 744163DB0DFB84DA, host
+        id: FsI1oGRW7cjhBjyxs1zDaq8V1ARg4asBFLWyzXqKUPOqVYw8KpAK4Jz4Y5lH/AL8UBXfWkIDWE0="
+      Reason: Failed to create resource
+      Status: "True"
+      Type: Failed
+...
+...
+```
