@@ -1,4 +1,4 @@
-## AWS S3 Provisioner - Dynamically Create _New_ Bucket OBC Example
+## AWS S3 Provisioner - Dynamically Create _New_ Bucket OR Access Existing Bucket OBC Examples
 This example will walk through the basic steps needed to dynamically provision
 a new AWS S3 Bucket. The end result is that application pods have read-write access to the new bucket via a Kubernetes Secret and ConfigMap.
 
