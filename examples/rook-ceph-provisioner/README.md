@@ -161,11 +161,11 @@ apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
   name: myobc [1]
-  namespace: s3-provisioner [2]
+  namespace: rook-prov [2]
 spec:
   generateBucketName: mybucket [3]
   bucketName: my-awesome-bucket [4]
-  storageClassName: s3-buckets [5]
+  storageClassName: rook-buckets [5]
 ```
 1. Name of the OBC
 1. Namespace of the OBC
@@ -186,13 +186,13 @@ apiVersion: objectbucket.io/v1alpha1
 kind: ObjectBucketClaim
 metadata:
   name: myobc [1]
-  namespace: s3-provisioner [2]
+  namespace: rook-prov [2]
 spec:
-  storageClassName: s3-existing-buckets [3]
+  storageClassName: ceph-rook-brown-class [3]
 ```
 1. Name of the OBC
 1. Namespace of the OBC
-1. StorageClass name
+1. StorageClass name for brownfield bucket
 
 **NOTE:** in the OBC here there is no reference to the bucket's name. This is defined in the storage class and is not a concern of the user creating the claim to this bucket.  An OBC does have fields for defining a bucket name for greenfield use only.
 ```
@@ -249,14 +249,14 @@ spec:
 
 *ConfigMap*
 ```yaml
- # kubectl get cm myobc -n s3-provisioner -o yaml
+ # kubectl get cm my-awesome-bucket -n rook-prov -o yaml
 apiVersion: v1
 data:
-  BUCKET_HOST: s3-us-west-1.amazonaws.com [1]
-  BUCKET_NAME: my-awesome-bucket [2]
-  BUCKET_PORT: "443"
-  BUCKET_REGION: us-west-1
-  BUCKET_SSL: "true"
+  BUCKET_HOST: rook-ceph-rgw-screeley-store.rook-ceph
+  BUCKET_NAME: my-awesome-bucket
+  BUCKET_PORT: "80"
+  BUCKET_REGION: us-east-1
+  BUCKET_SSL: "false"
   BUCKET_SUBREGION: ""
 kind: ConfigMap
 metadata:
@@ -264,13 +264,11 @@ metadata:
   finalizers:
   - objectbucket.io/finalizer
   name: my-awesome-bucket
-  namespace: s3-provisioner
+  namespace: rook-prov
   resourceVersion: "892"
   selfLink: /api/v1/namespaces/s3-provisioner/configmaps/my-awesome-bucket
   uid: 2edcc58a-aff8-4a29-814a-ffbb6439a9cd
 ```
-1. The AWS S3 host.
-1. The name of the new bucket we are gaining access to.
 
 
 *Secret*
@@ -334,7 +332,6 @@ spec:
     ports:
     - containerPort: 3000
       protocol: TCP
-
 ```
 1. Name of the generated configmap from the provisioning process
 1. Name of the generated secret from the provisioning process
