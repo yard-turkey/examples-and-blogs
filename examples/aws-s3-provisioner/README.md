@@ -130,6 +130,8 @@ The StorageClass defines the name of the provisioner and holds other properties 
 the Owner Secret and Namespace, and the AWS Region.
 
 #### Greenfield Example:
+For Greenfield, a new, dynamic bucket will be generated.
+
 1. Create the Kubernetes StorageClass for the Provisioner.
 ```yaml
 kind: StorageClass
@@ -159,6 +161,35 @@ storageclass.storage.k8s.io/s3-buckets created
 
 #### Brownfield Example:
 
+For brownfield, the StorageClass defines the name of the provisioner and the name of the existing bucket. It also includes other properties needed by the target
+provisioner, including: the Owner Secret and Namespace, and the AWS Region
+
+1. Create the Kubernetes StorageClass for the Provisioner.
+```yaml
+kind: StorageClass
+apiVersion: storage.k8s.io/v1
+metadata:
+  name: s3-existing-buckets [1]
+provisioner: aws-s3.io/bucket [2]
+parameters:
+  bucketName: my-existing-bucket [3]
+  region: us-west-1 [4]
+  secretName: s3-bucket-owner [5]
+  secretNamespace: s3-provisioner [6]
+```
+1. Name of the StorageClass, this will be referenced in the User ObjectBucketClaim.
+1. Provisioner name
+1. Name of the existing bucket
+1. AWS Region that the StorageClass will serve
+1. Name of the bucket owner Secret created above
+1. Namespace for that bucket owner secret
+
+**NOTE:** the storage class's `reclaimPolicy` is ignored for existing buckets.
+
+```
+ # kubectl create -f storageclass-brownfield.yaml
+storageclass.storage.k8s.io/s3-buckets created
+```
 
 ### User Creates ObjectBucketClaim
 An ObjectBucketClaim follows the same concept as a PVC, in that
@@ -168,6 +199,7 @@ they need access to it. The user will work with the cluster/storage
 administrator to get the proper StorageClass needed and will
 then request access via the OBC.
 
+#### Greenfield Request Example:
 
 1. Create the ObjectBucketClaim.
 ```yaml
@@ -188,6 +220,27 @@ spec:
 1. StorageClass name
 
 **NOTE:** if both `generateBucketName` and `bucketName` are omitted, and the storage class does _not_ define a bucket name, then a new, random bucket name is generated with no prefix.
+```
+ # kubectl create -f obc-brownfield.yaml
+objectbucketclaim.objectbucket.io/myobc created
+```
+#### Brownfield Request Example:
+
+1. Create the ObjectBucketClaim.
+```yaml
+apiVersion: objectbucket.io/v1alpha1
+kind: ObjectBucketClaim
+metadata:
+  name: myobc [1]
+  namespace: s3-provisioner [2]
+spec:
+  storageClassName: s3-existing-buckets [3]
+```
+1. Name of the OBC
+1. Namespace of the OBC
+1. StorageClass name
+
+**NOTE:** in the OBC here there is no reference to the bucket's name. This is defined in the storage class and is not a concern of the user creating the claim to this bucket.  An OBC does have fields for defining a bucket name for greenfield use only.
 ```
  # kubectl create -f obc-brownfield.yaml
 objectbucketclaim.objectbucket.io/myobc created
