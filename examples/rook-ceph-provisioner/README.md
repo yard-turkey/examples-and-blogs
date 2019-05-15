@@ -48,15 +48,12 @@ rook-discover-5v92n                                        1/1     Running     0
 3. Create your [operator.yaml](https://github.com/yard-turkey/examples-and-blogs/blob/master/examples/rook-ceph-provisioner/operator.yaml) and execute it - note this is a development branch image that you can build and put in docker or quay - the image listed here might be old!
 
 ```yaml
-...
-...
+
       containers:
       - name: rook-ceph-operator
-        # image: rook/ceph:v1.0.0
-        # image: jeffvance/rook-ceph-provisioner:v0.0.1
         image: screeley44/rook-ceph-provisioner:v0.0.1
         imagePullPolicy: Always
-...
+
 ```
 
 
