@@ -45,7 +45,22 @@ rook-discover-5v92n                                        1/1     Running     0
 # kubectl create clusterrolebinding cluster-admin-rook --clusterrole=cluster-admin --user=system:serviceaccount:rook-ceph:rook-ceph-system
 ```
 
-3. Create the ObjectStore and ObjectStoreUser.
+3. Create your [operator.yaml]() and execute it - note this is a development branch image that you can build and put in docker or quay - the image listed here might be old!
+
+```yaml
+...
+...
+      containers:
+      - name: rook-ceph-operator
+        # image: rook/ceph:v1.0.0
+        # image: jeffvance/rook-ceph-provisioner:v0.0.1
+        image: screeley44/rook-ceph-provisioner:v0.0.1
+        imagePullPolicy: Always
+...
+```
+
+
+4. Create the ObjectStore and ObjectStoreUser.
 
 ```yaml
 apiVersion: ceph.rook.io/v1
