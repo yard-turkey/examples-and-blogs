@@ -8,7 +8,7 @@ pattern mimics the Kubernetes PersistentVolume and PersistentVolumeClaim model.
 
 ### Table Of Contents
 1. [Assumptions](#assumptions)
-1. [Deploy or Run AWS S3 Provisioner on Cluster](#deploy-or-run-aws-s3-provisioner-on-cluster)
+1. [Deploy or Run Rook-Ceph S3 Provisioner on Cluster](#deploy-or-run-rook-ceph-s3-provisioner-on-cluster)
 1. [Administrator Creates Secret](#administrator-creates-secret)
 1. [Administrator Creates StorageClass](#administrator-creates-storageclass)
 1. [User Creates ObjectBucketClaim](#user-creates-objectbucketclaim)
@@ -45,7 +45,7 @@ rook-discover-5v92n                                        1/1     Running     0
 # kubectl create clusterrolebinding cluster-admin-rook --clusterrole=cluster-admin --user=system:serviceaccount:rook-ceph:rook-ceph-system
 ```
 
-3. Create your [operator.yaml]() and execute it - note this is a development branch image that you can build and put in docker or quay - the image listed here might be old!
+3. Create your [operator.yaml](https://github.com/yard-turkey/examples-and-blogs/blob/master/examples/rook-ceph-provisioner/operator.yaml) and execute it - note this is a development branch image that you can build and put in docker or quay - the image listed here might be old!
 
 ```yaml
 ...
