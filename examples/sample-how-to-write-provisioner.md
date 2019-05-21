@@ -36,6 +36,9 @@ section that allows each provisioner flexibility in what is required for it to s
 
 **[Note]** The developer only needs to focus on implementing the main interfaces defined by the library specific to the needs of their backend/provisioner.
 
+
+
+
 # Development Flow Example
 The following sections will lend some guidance on how a provisioner can be developed, built and tested.
 
@@ -126,6 +129,9 @@ bin/*
 # IDE config
 .idea*
 ```
+
+
+
 
 
 # Code the Provisioner
@@ -263,6 +269,8 @@ VGO is more aligned with the long term direction of Go Dependency Management.
 ```
 **[NOTE]** This will pull in all the project dependencies and create the <Repo Root/*vendor* directory
 and the *go.mod* and *go.sum* files. If your imports and dependencies change, just rerun the above command.
+
+
 
 
 # Testing Provisioner
