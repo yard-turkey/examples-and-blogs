@@ -2,8 +2,8 @@
 
 ### Summary
 This example will walk through the steps on how to create your own provisioner. For this
-example we will be building the start of a Google Cloud Storage (GCS) Provisioner to help
-show a real working example.
+example we will be revisiting some of the key concepts and steps we did to
+produce the AWS-S3-Provisioner.
 
 #### Prerequisites and Key Components
 1. Access to a Kuberenetes Cluster
@@ -43,13 +43,14 @@ no special meaning other than the guy who created it had a bunch of wild turkeys
 
 #### Sample Directory Structure
 
-1. Build your repo locally or in github
-- From your local GOPATH build the common src/github.com directory structure
+1. Build your repo locally or in github.
+
+From your local $GOPATH build the common *src/github.com* directory structure
 ```
   # mkdir -p <$GOPATH>/src/github.com/<repo>/<app>
 ```
 
-2. Create the basic directory structure from the Repo Root directory. The below example is by no means the
+2. Create the basic directory structure from the *<Repo Root>* directory. The below example is by no means the
 only way to structure a provisioner, the key is to do what makes sense for you and your project.
 
 ```
@@ -66,7 +67,7 @@ only way to structure a provisioner, the key is to do what makes sense for you a
             
 ```
 
-3. Create a generic .gitignore
+3. Create a generic .gitignore file.
 
 ```
 # Logs and archives
@@ -97,8 +98,114 @@ bin/*
 Now the basic project structure is in place, you can begin building the provisioner. We will add a
 <provisioner>.go file in the <Repo Root>/cmd/ directory.
 
-#### Sample Code Template
+#### Import Library and Other Common components
+```
+	"github.com/yard-turkey/lib-bucket-provisioner/pkg/apis/objectbucket.io/v1alpha1"
+	libbkt "github.com/yard-turkey/lib-bucket-provisioner/pkg/provisioner"
+	apibkt "github.com/yard-turkey/lib-bucket-provisioner/pkg/provisioner/api"
 
+	storageV1 "k8s.io/api/storage/v1"
+	"k8s.io/client-go/kubernetes"
+	restclient "k8s.io/client-go/rest"
+	"k8s.io/client-go/tools/clientcmd"
+```
+
+#### Import Provisioner Specific Libraries
+These will vary, project to project, but for example, for our implementation with the AWS S3 Provisioner we needed to import components of the AWS S3 SDK.
+```
+	"github.com/aws/aws-sdk-go/aws"
+	"github.com/aws/aws-sdk-go/aws/awserr"
+	"github.com/aws/aws-sdk-go/aws/session"
+	awsuser "github.com/aws/aws-sdk-go/service/iam"
+	"github.com/aws/aws-sdk-go/service/s3"
+	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+```
+
+Maybe for something like Google Cloud Storage (GCS) you might need something like
+```
+	gcs "cloud.google.com/go/storage"
+```
+
+Some other common GoLang packages might be similar to this
+```
+	"context"
+	"flag"
+	"fmt"
+	_ "net/url"
+	"os"
+	"os/signal"
+	"strings"
+	"syscall"
+```
+
+#### Implement Library Interface Stub
+The actual implementation of these 4 interfaces is strictly in the hands of the provisioner developer. These interfaces
+form a contract with the library, but each implementation could vary based on vendor specific details.
+
+1. Main Library Interfaces
+
+Provision - Create a new bucket based on ObjectBucketClaim (OB)
+```
+   func (p gcsProvisioner) Provision(options *apibkt.BucketOptions) (*v1alpha1.ObjectBucket, error) {}
+```
+
+Delete - De-provision a bucket that has an existing ObjectBucket (OB) resource attached
+```
+   func (p gcsProvisioner) Delete(ob *v1alpha1.ObjectBucket) error {}
+```
+
+Grant - Create Access to an existing Static Bucket based on StorageClass and OBC resource.
+```
+   func (p gcsProvisioner) Grant(options *apibkt.BucketOptions) (*v1alpha1.ObjectBucket, error) {}
+```
+
+Revoke - Remove access to an existing static Bucket.
+```
+    func (p gcsProvisioner) Revoke(ob *v1alpha1.ObjectBucket) error {}
+```
+
+2. General ObjectBucket Return object that the library expects on creates.
+```
+// Return the OB struct with minimal fields filled in.
+func (p *gcsProvisioner) rtnObjectBkt(bktName string) *v1alpha1.ObjectBucket {
+
+	host := strings.Replace(s3Hostname, regionInsert, p.region, 1)
+	conn := &v1alpha1.Connection{
+		Endpoint: &v1alpha1.Endpoint{
+			BucketHost: host,
+			BucketPort: httpsPort,
+			BucketName: bktName,
+			Region:     p.region,
+			SSL:        true,
+		},
+		Authentication: &v1alpha1.Authentication{
+			AccessKeys: &v1alpha1.AccessKeys{
+				AccessKeyID:     p.bktUserAccessId,
+				SecretAccessKey: p.bktUserSecretKey,
+			},
+		},
+		AdditionalState: map[string]string{
+			obStateARN:  p.bktUserPolicyArn,
+			obStateUser: p.bktUserName,
+		},
+	}
+
+	return &v1alpha1.ObjectBucket{
+		Spec: v1alpha1.ObjectBucketSpec{
+			Connection: conn,
+		},
+	}
+}
+```
+
+
+#### Sample Code
+Take a look at some existing provisioners to get an idea of how these interfaces are implemented and you can
+most likely use these a template to get started, updating where it is appropriate.
+
+[AWS-S3-Provisioner](https://github.com/yard-turkey/aws-s3-provisioner)
+
+[Rook-Ceph Provisioner](TBD)
 
 
 #### Dependency Management
@@ -120,8 +227,8 @@ VGO is more aligned with the long term direction of Go Dependency Management.
 ```
 # vgo mod vendor
 ```
-**[NOTE]** This will pull in all the project dependencies and create the <Repo Root/*vendor* directory.
-If your imports and dependencies change, just rerun the above command.
+**[NOTE]** This will pull in all the project dependencies and create the <Repo Root/*vendor* directory
+and the *go.mod* and *go.sum* files. If your imports and dependencies change, just rerun the above command.
 
 
 ### Testing Provisioner
