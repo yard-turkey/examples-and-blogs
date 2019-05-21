@@ -178,22 +178,22 @@ form a contract with the library, but each implementation could vary based on ve
 
 1. Main Library Interfaces
 
-Provision - Create a new bucket based on ObjectBucketClaim (OB)
+*Provision* - Create a new bucket based on ObjectBucketClaim (OB)
 ```
    func (p gcsProvisioner) Provision(options *apibkt.BucketOptions) (*v1alpha1.ObjectBucket, error) {}
 ```
 
-Delete - De-provision a bucket that has an existing ObjectBucket (OB) resource attached
+*Delete* - De-provision a bucket that has an existing ObjectBucket (OB) resource attached
 ```
    func (p gcsProvisioner) Delete(ob *v1alpha1.ObjectBucket) error {}
 ```
 
-Grant - Create Access to an existing Static Bucket based on StorageClass and OBC resource.
+*Grant* - Create Access to an existing Static Bucket based on StorageClass and OBC resource.
 ```
    func (p gcsProvisioner) Grant(options *apibkt.BucketOptions) (*v1alpha1.ObjectBucket, error) {}
 ```
 
-Revoke - Remove access to an existing static Bucket.
+*Revoke* - Remove access to an existing static Bucket.
 ```
     func (p gcsProvisioner) Revoke(ob *v1alpha1.ObjectBucket) error {}
 ```
