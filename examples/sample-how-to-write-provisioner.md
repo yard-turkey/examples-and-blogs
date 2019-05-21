@@ -13,10 +13,10 @@ show a real working example.
 - etc...
 
 2. Docker
-- Best to install latest Docker, but this should all work with minimum of Docker 1.13.1
+  - Best to install latest Docker, but this should all work with minimum of Docker 1.13.1
 
 3. Access to a public image/application repository
-- Personal Account/Repository on either [docker.io](https://hub.docker.com/) or [quay.io](https://quay.io/repository/)
+  - Personal Account/Repository on either [docker.io](https://hub.docker.com/) or [quay.io](https://quay.io/repository/)
 
 4. GoLang/IDE
 - go1.11.4 or higher should be fine
