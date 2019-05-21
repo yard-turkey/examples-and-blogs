@@ -36,10 +36,10 @@ section that allows each provisioner flexibility in what is required for it to s
 
 **[Note]** The developer only needs to focus on implementing the main interfaces defined by the library specific to the needs of their backend/provisioner.
 
-## Development Flow Example
+# Development Flow Example
 The following sections will lend some guidance on how a provisioner can be developed, built and tested.
 
-### Prerequisites and Key Components
+## Prerequisites and Key Components
 1. Access to a Kuberenetes Cluster
 - Run local with [Minikube](https://kubernetes.io/docs/setup/minikube/).
 - Run local with [hack/local-up-cluster.sh](https://github.com/kubernetes/kubernetes/blob/master/hack/local-up-cluster.sh) from [Kubernetes repo](https://github.com/kubernetes/kubernetes)
@@ -57,7 +57,7 @@ The following sections will lend some guidance on how a provisioner can be devel
 
 
 
-### Project Layout
+## Project Layout
 A project can be structured in several different ways, this is just one example of a 
 project model that was used with the [AWS S3 Provisioner](https://github.com/yard-turkey/aws-s3-provisioner).
 
@@ -128,7 +128,7 @@ bin/*
 ```
 
 
-## Code the Provisioner
+# Code the Provisioner
 Now the basic project structure is in place, you can begin building the provisioner. We will add a
 <provisioner>.go file in the <Repo Root>/cmd/ directory.
 
@@ -265,7 +265,7 @@ VGO is more aligned with the long term direction of Go Dependency Management.
 and the *go.mod* and *go.sum* files. If your imports and dependencies change, just rerun the above command.
 
 
-### Testing Provisioner
+# Testing Provisioner
 As mentioned above, if you don't have a test cluster available and running, now is the time to get one running.
 See links above for some guidance on how one might go about doing that.
 
