@@ -1,11 +1,44 @@
-## Developer Notes: How to Write a Provisioner
+# Developer Notes: How to Write a Provisioner
 
-### Summary
+## Overview and Summary
+
 This example will walk through the steps on how to create your own provisioner. For this
 example we will be revisiting some of the key concepts and steps we did to
-produce the AWS-S3-Provisioner.
+produce the AWS-S3-Provisioner. 
 
-#### Prerequisites and Key Components
+For additional information on the design of the library take a look [here](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/doc/design/object-bucket-lib.md)
+
+## Key Concepts
+
+- Library uses the [ObjectBucket and ObjectBucketClaim](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/deploy/customResourceDefinitions.yaml) CustomResourceDefinition that is very closely modeled after the existing Kubernetes PV and PVC patterns.
+
+- The Library and Provisoners also use other common Kubernetes Dynamic Provisioning resources, such as StorageClasses, Secrets and ConfigMaps.
+
+General Flow:
+*Cluster:*
+- CRD is deployed on cluster.
+- Provisioner/Operator is deployed on the target cluster.
+
+*Admin:*
+- Admin creates StorageClass identifying the provisioner it will serve, the StorageClass will have a free-form parameters 
+section that allows each provisioner flexibility in what is required for it to serve the requests.
+- Admin might need to create additional Secrets or some kind of access/credentials to the StorageClass to give the provisioner proper permissions to act on Buckets/Endpoints/Requests.
+- Admin might also need to create proper service accounts for the Provisioner to run.
+
+*User:*
+- User creates an OBC request (Similar to a PVC) that points to the StorageClass of the provisioner.
+
+*Library/Provisioner:*
+- Watches for all OBC's in all Namespaces, If the provisioner exists, it will queue and work on the request.
+- Returns OB, Secrets and ConfigMaps to the User/Cluster for consumption.
+- Manages all internals of the Kubernetes framework, controller loop logic, etc...
+
+**[Note]** The developer only needs to focus on implementing the main interfaces defined by the library specific to the needs of their backend/provisioner.
+
+## Development Flow Example
+The following sections will lend some guidance on how a provisioner can be developed, built and tested.
+
+### Prerequisites and Key Components
 1. Access to a Kuberenetes Cluster
 - Run local with [Minikube](https://kubernetes.io/docs/setup/minikube/).
 - Run local with [hack/local-up-cluster.sh](https://github.com/kubernetes/kubernetes/blob/master/hack/local-up-cluster.sh) from [Kubernetes repo](https://github.com/kubernetes/kubernetes)
@@ -94,7 +127,7 @@ bin/*
 ```
 
 
-### Code the Provisioner
+## Code the Provisioner
 Now the basic project structure is in place, you can begin building the provisioner. We will add a
 <provisioner>.go file in the <Repo Root>/cmd/ directory.
 
@@ -235,7 +268,7 @@ and the *go.mod* and *go.sum* files. If your imports and dependencies change, ju
 As mentioned above, if you don't have a test cluster available and running, now is the time to get one running.
 See links above for some guidance on how one might go about doing that.
 
-#### Build and Test Local Binary
+## Build and Test Local Binary
 
 1. Build the provisioner binary.
 ```
@@ -279,7 +312,7 @@ If using a real cluster, like Kops, passing in the *master* and *kubeconfig* par
 ```
 
 
-#### Build and Test Docker Image
+## Build and Test Docker Image
 1. Add a simple Dockerfile to the project in the <Repo Root> directory.
 
 ```
