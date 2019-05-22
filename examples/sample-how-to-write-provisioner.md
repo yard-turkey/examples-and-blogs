@@ -1,4 +1,29 @@
+
+
+- [Overview and Summary](#overview-and-summary)
+  * [Key Concepts](#key-concepts)
+  * [General Usage Flow](#general-usage-flow)
+- [Developer Setup](#developer-setup)
+  * [Prerequisites and Key Components](#prerequisites-and-key-components)
+  * [Project Layout](#project-layout)  
+    + [Create a GitHub Repo](#create-a-github-repo)
+    + [Sample Directory Structure](#sample-directory-structure)    
+- [Code the Provisioner](#code-the-provisioner)
+  * [Import Library and Other Common Packages](#import-library-and-other-common-packages)
+  * [Import Provisioner Specific Libraries](#import-provisioner-specific-libraries)
+  * [Implement Library Interface Stub](#implement-library-interfacestub)  
+  * [Sample Code](#sample-code)  
+  * [Dependency Management](#dependency-management)  
+- [Testing Provisioner](#testing-provisioner)
+  * [Build and Test Local Binary](#build-and-test-local-binary)
+  * [Build and Test Docker Image](#build-and-test-docker-image)  
+- [Usage Examples](#usage-examples)
+
 # Developer Notes: How to Write a Provisioner
+
+> Some notes on how to write your own provisioner.
+
+<!-- toc -->
 
 ## Overview and Summary
 
@@ -8,13 +33,13 @@ produce the AWS-S3-Provisioner.
 
 For additional information on the design of the library take a look [here](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/doc/design/object-bucket-lib.md)
 
-## Key Concepts
+### Key Concepts
 
 - Library uses the [ObjectBucket and ObjectBucketClaim](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/deploy/customResourceDefinitions.yaml) CustomResourceDefinition that is very closely modeled after the existing Kubernetes PV and PVC patterns.
 
 - The Library and Provisoners also use other common Kubernetes Dynamic Provisioning resources, such as StorageClasses, Secrets and ConfigMaps.
 
-#### General Flow
+### General Usage Flow
 
 *Cluster:*
 - CRD is deployed on cluster.
@@ -39,10 +64,10 @@ section that allows each provisioner flexibility in what is required for it to s
 
 
 
-# Development Flow Example
+## Developer Setup
 The following sections will lend some guidance on how a provisioner can be developed, built and tested.
 
-## Prerequisites and Key Components
+### Prerequisites and Key Components
 1. Access to a Kuberenetes Cluster
 - Run local with [Minikube](https://kubernetes.io/docs/setup/minikube/).
 - Run local with [hack/local-up-cluster.sh](https://github.com/kubernetes/kubernetes/blob/master/hack/local-up-cluster.sh) from [Kubernetes repo](https://github.com/kubernetes/kubernetes)
@@ -60,7 +85,7 @@ The following sections will lend some guidance on how a provisioner can be devel
 
 
 
-## Project Layout
+### Project Layout
 A project can be structured in several different ways, this is just one example of a 
 project model that was used with the [AWS S3 Provisioner](https://github.com/yard-turkey/aws-s3-provisioner).
 
@@ -134,11 +159,11 @@ bin/*
 
 
 
-# Code the Provisioner
+## Code the Provisioner
 Now the basic project structure is in place, you can begin building the provisioner. We will add a
 <provisioner>.go file in the <Repo Root>/cmd/ directory.
 
-#### Import Library and Other Common components
+### Import Library and Other Common Packages
 ```
 	"github.com/yard-turkey/lib-bucket-provisioner/pkg/apis/objectbucket.io/v1alpha1"
 	libbkt "github.com/yard-turkey/lib-bucket-provisioner/pkg/provisioner"
@@ -150,7 +175,7 @@ Now the basic project structure is in place, you can begin building the provisio
 	"k8s.io/client-go/tools/clientcmd"
 ```
 
-#### Import Provisioner Specific Libraries
+### Import Provisioner Specific Libraries
 These will vary, project to project, but for example, for our implementation with the AWS S3 Provisioner we needed to import components of the AWS S3 SDK.
 ```
 	"github.com/aws/aws-sdk-go/aws"
@@ -178,7 +203,7 @@ Some other common GoLang packages might be similar to this
 	"syscall"
 ```
 
-#### Implement Library Interface Stub
+### Implement Library Interface Stub
 The actual implementation of these 4 interfaces is strictly in the hands of the provisioner developer. These interfaces
 form a contract with the library, but each implementation could vary based on vendor specific details.
 
@@ -239,7 +264,7 @@ func (p *gcsProvisioner) rtnObjectBkt(bktName string) *v1alpha1.ObjectBucket {
 ```
 
 
-#### Sample Code
+### Sample Code
 Take a look at some existing provisioners to get an idea of how these interfaces are implemented and you can
 most likely use these a template to get started, updating where it is appropriate.
 
@@ -248,7 +273,7 @@ most likely use these a template to get started, updating where it is appropriat
 [Rook-Ceph Provisioner](TBD)
 
 
-#### Dependency Management
+### Dependency Management
 The AWS S3 Provisioner used go modules [vgo](https://github.com/golang/vgo) for dependency management. You can also use [Dep](https://golang.github.io/dep/docs/installation.html), but I think
 VGO is more aligned with the long term direction of Go Dependency Management.
 
@@ -273,11 +298,11 @@ and the *go.mod* and *go.sum* files. If your imports and dependencies change, ju
 
 
 
-# Testing Provisioner
+## Testing Provisioner
 As mentioned above, if you don't have a test cluster available and running, now is the time to get one running.
 See links above for some guidance on how one might go about doing that.
 
-## Build and Test Local Binary
+### Build and Test Local Binary
 
 1. Build the provisioner binary.
 ```
@@ -321,7 +346,7 @@ If using a real cluster, like Kops, passing in the *master* and *kubeconfig* par
 ```
 
 
-## Build and Test Docker Image
+### Build and Test Docker Image
 1. Add a simple Dockerfile to the project in the <Repo Root> directory.
 
 ```
@@ -354,6 +379,6 @@ i.e.
 
 4. You can now create a deployment or pod to test your image and provisioner.
 
-## Examples
+## Usage Examples
 
 End-to-End [Examples](https://github.com/yard-turkey/examples-and-blogs/tree/master/examples)
