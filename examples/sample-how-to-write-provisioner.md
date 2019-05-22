@@ -1,4 +1,6 @@
+# Developer Notes: How to Write a Provisioner
 
+> Some notes on how to write your own provisioner.
 
 - [Overview and Summary](#overview-and-summary)
   * [Key Concepts](#key-concepts)
@@ -18,10 +20,6 @@
   * [Build and Test Local Binary](#build-and-test-local-binary)
   * [Build and Test Docker Image](#build-and-test-docker-image)  
 - [Usage Examples](#usage-examples)
-
-# Developer Notes: How to Write a Provisioner
-
-> Some notes on how to write your own provisioner.
 
 <!-- toc -->
 
