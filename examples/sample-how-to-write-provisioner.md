@@ -159,7 +159,7 @@ bin/*
 
 ## Code the Provisioner
 Now the basic project structure is in place, you can begin building the provisioner. We will add a
-<provisioner>.go file in the <Repo Root>/cmd/ directory.
+*provisioner*.go file in the *Repo Root*/cmd/ directory.
 
 ### Import Library and Other Common Packages
 ```
