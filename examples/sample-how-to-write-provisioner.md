@@ -275,6 +275,9 @@ most likely use these a template to get started, updating where it is appropriat
 The AWS S3 Provisioner used go modules [vgo](https://github.com/golang/vgo) for dependency management. You can also use [Dep](https://golang.github.io/dep/docs/installation.html), but I think
 VGO is more aligned with the long term direction of Go Dependency Management.
 
+It should also be noted that the Library uses go-client 1.11 and Kubernetes 1.14. If your project uses different versions
+of these packages, there might be some dependency resolvement issues as you build your project.
+
 1. Install vgo
 ```
  # go get -u golang.org/x/vgo.
