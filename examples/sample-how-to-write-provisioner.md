@@ -50,7 +50,7 @@ section that allows each provisioner flexibility in what is required for it to s
 - Admin might also need to create proper service accounts for the Provisioner to run.
 
 *User:*
-- User creates an OBC request (Similar to a PVC) that points to the StorageClass of the provisioner.
+- User creates an [OBC request](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/deploy/example-claim.yaml) (Similar to a PVC) that points to the StorageClass of the provisioner.
 
 *Library/Provisioner:*
 - Watches for all OBC's in all Namespaces, If the provisioner exists, it will queue and work on the request.
