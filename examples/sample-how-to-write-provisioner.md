@@ -272,12 +272,20 @@ most likely use these a template to get started, updating where it is appropriat
 
 
 ### Dependency Management
-The AWS S3 Provisioner used go modules [vgo](https://github.com/golang/vgo) for dependency management. You can also use [Dep](https://golang.github.io/dep/docs/installation.html), but I think
-VGO is more aligned with the long term direction of Go Dependency Management.
 
-It should also be noted that the Library uses go-client 1.11 and Kubernetes 1.14. If your project uses different versions
-of these packages, there might be some dependency resolvement issues as you build your project.
+The Bucket Library uses `client-go v1.11` and `Kubernete v1.14`. If your project uses different versions
+of these packages, there may be dependency resolution issues.
+The dependency landscape may be challenging until we (including Kubernetes) use Go modules.
 
+The AWS S3 Provisioner does use Go modules [vgo](https://github.com/golang/vgo) for dependency management and builds easily.
+On the other hand, the Rook-Ceph RGW provisioner uses [Dep](https://golang.github.io/dep/docs/installation.html), which is more fragile and restrictive.
+In fact, after many tries, we could not build the Rook-Ceph operator using the _runtime-controller_ package originally imported by the library.
+This was due to unresolvable deps between _client-go_, _kubernetes_, _controller-runtime_, and Rook's own _Gopkg.toml_ file.
+The fix was for the library to not import _controller-runtime_ and, instead, code the needed controller pieces directly into the lib.
+
+The library probably will need to support a branch for each version of _client-go_ needed by provisioners.
+
+Steps:
 1. Install vgo
 ```
  # go get -u golang.org/x/vgo.
