@@ -31,6 +31,8 @@ produce the AWS-S3-Provisioner.
 
 For additional information on the design of the library take a look [here](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/doc/design/object-bucket-lib.md)
 
+To contribute or view the library code take a look [here](https://github.com/yard-turkey/lib-bucket-provisioner)
+
 ### Key Concepts
 
 - Library uses the [ObjectBucket and ObjectBucketClaim](https://github.com/yard-turkey/lib-bucket-provisioner/blob/master/deploy/customResourceDefinitions.yaml) CustomResourceDefinition that is very closely modeled after the existing Kubernetes PV and PVC patterns.
