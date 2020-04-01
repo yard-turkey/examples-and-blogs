@@ -16,7 +16,7 @@ chmod +x ~/bin/argocd
 
 Export the KUBECONFIG that relates to your site1 environment.
 ```
-export KUBECONFIG=/home/rcook/git/multisite/installation/site1/auth/kubeconfig
+export KUBECONFIG=/home/rcook/git/examples-and-blogs/examples/managing-with-mirroring/multisite/installation/site1/auth/kubeconfig
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ARGOCD_SERVER_PASSWORD=$(oc -n argocd get pod -l "app.kubernetes.io/name=argocd-server" -o jsonpath='{.items[*].metadata.name}')
@@ -34,7 +34,7 @@ argocd --insecure --grpc-web --server ${ARGOCD_ROUTE}:443 account update-passwor
 
 Export the KUBECONFIG that relates to your site2 environment.
 ```
-export KUBECONFIG=/home/rcook/git/multisite/installation/site2/auth/kubeconfig
+export KUBECONFIG=/home/rcook/git/examples-and-blogs/examples/managing-with-mirroring/multisite/installation/site2/auth/kubeconfig
 kubectl create namespace argocd
 kubectl apply -n argocd -f https://raw.githubusercontent.com/argoproj/argo-cd/stable/manifests/install.yaml
 ARGOCD_SERVER_PASSWORD=$(oc -n argocd get pod -l "app.kubernetes.io/name=argocd-server" -o jsonpath='{.items[*].metadata.name}')
@@ -49,11 +49,11 @@ argocd --insecure --grpc-web --server ${ARGOCD_ROUTE}:443 account update-passwor
 ```
 
 ## Adding repository
-NOTE: This must be done on both servers. If you do not have your pub key loaded into GitHub use https://github.com/cooktheryan/multisite-application.
+NOTE: This must be done on both servers. If you do not have your pub key loaded into GitHub use https://github.com/yard-turkey/examples-and-blogs.git.
 
 ### Site1
 ```
-export KUBECONFIG=/home/rcook/git/multisite/installation/site1/auth/kubeconfig
+export KUBECONFIG=/home/rcook/git/examples-and-blogs/examples/managing-with-mirroring/multisite/installation/site1/auth/kubeconfig
 ARGOCD_ROUTE=$(oc -n argocd get route argocd-server -o jsonpath='{.spec.host}')
 argocd --insecure --grpc-web login ${ARGOCD_ROUTE}:443 --username admin --password ${ARGOCD_SERVER_PASSWORD}
 argocd repo add git@github.com:cooktheryan/multisite-application.git --ssh-private-key-path ~/.ssh/id_rsa
@@ -61,7 +61,7 @@ argocd repo add git@github.com:cooktheryan/multisite-application.git --ssh-priva
 
 ### Site2
 ```
-export KUBECONFIG=/home/rcook/git/multisite/installation/site2/auth/kubeconfig
+export KUBECONFIG=/home/rcook/git/examples-and-blogs/examples/managing-with-mirroring/multisite/installation/site2/auth/kubeconfig
 ARGOCD_ROUTE=$(oc -n argocd get route argocd-server -o jsonpath='{.spec.host}')
 argocd --insecure --grpc-web login ${ARGOCD_ROUTE}:443 --username admin --password ${ARGOCD_SERVER_PASSWORD}
 argocd repo add git@github.com:cooktheryan/multisite-application.git --ssh-private-key-path ~/.ssh/id_rsa

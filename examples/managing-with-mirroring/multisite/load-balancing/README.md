@@ -1,9 +1,6 @@
 # Cloudflare
 We used cloudflare for this demonstration because we wanted to show the whole picture. Any other Global Load Balancing solution would work or an F5 appliance.
 
-## Key items
-Cloudflare requires the ability to manage all the NS entries for a domain. So for example you have to point your NS records for DNS from your registrar to cloudflare to be able to use the service. IF you need to "borrow" a cloudflare domain contact Ryan Cook as one is already loaded in an account that we can share.
-
 ## TCP/HTTP
 When you first setup the load balance site1 must be set as TCP while configuring the application. This is because the HTTP GET request that is sent will not work until wordpress has been installed. After the installation is complete you can use HTTP GET to the address of / over port 80 and request 200. 
 

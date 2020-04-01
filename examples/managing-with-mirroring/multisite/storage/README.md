@@ -1,7 +1,7 @@
 # Storage setup
 
 ## AWS
-In AWS an extra disk needs to be created and attached to the worker or OCS instances.
+On AWS an extra disk needs to be created and attached to the worker or OCS instances.
 
 ## AWS security groups
 The following ports must be opened up or all traffic must be allowed between workers at site1 to site2 and vice versa.

@@ -5,6 +5,7 @@ Two clusters must be created. The install config of one of those clusters can be
 For site1 default values can be used.
 
 ```
+cd ~/git/examples-and-blogs/examples/managing-with-mirroring/multisite
 openshift-install create install-config --dir site1
 ```
 
@@ -45,7 +46,7 @@ sed -i 's/admin/site2/g' kubeconfig/site2/kubeconfig
 ## Peering
 Once the changes have been made to the kubeconfig export KUBECONFIG and setup the peering connection
 ```
-export KUBECONFIG=/home/user/git/multisite/kubeconfig/site1/kubeconfig:/home/user/git/multisite/kubeconfig/site2/kubeconfig
+export KUBECONFIG=~/git/examples-and-blogs/examples/managing-with-mirroring/multisite/kubeconfig/site1/kubeconfig:~/git/examples-and-blogs/examples/managing-with-mirroring/multisite/kubeconfig/site2/kubeconfig
 ./create-peer.sh
 ```
 
