@@ -5,7 +5,7 @@ the commands needed to perform the failover demo.
 For more information see [official rbd mirroring documentation](https://docs.ceph.com/docs/master/rbd/rbd-mirroring/)
 
 
-**[NOTE]** This assumes you have [Setup the Storage](../../storage/README.md) including the StorageClass and Pool! and that the Primary Cluster (Site1) has the WP + MySQL App running
+**[NOTE]** This assumes you have [Setup the Storage](../storage/README.md) including the StorageClass and Pool! and that the Primary Cluster (Site1) has the WP + MySQL App running
 and has generated the proper rbd images!
 
 
