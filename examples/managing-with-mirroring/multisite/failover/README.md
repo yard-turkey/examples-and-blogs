@@ -1,13 +1,13 @@
 # Fail over from site 1 to site 2
-The first step is to make a change to the blog located at wordpress.demo-sysdeseng.com this can be a comment or a new post.
+The first step is to make a change to the blog located at wordpress.example.com(replace example.com with your GLB FQDN) this can be a comment or a new post.
 
 NOTE: To speed this process up it may be beneficial to be logged into ArgoCD web UI or use the ArgoCD binary to force the sync to modify the replicas.
 
 ## Make changes to the repository
-Make changes to the fork of https://github.com/cooktheryan/multisite-application or to the repository if you have access. 
+Make changes to your fork of the repository. 
 
 ```
-cd ~/git/multisite-application/
+cd ~/git/examples-and-blogs/examples/managing-with-mirroring/multisite-application
 sed -i 's/replicas: 1/replicas: 0/g' wordpress/overlays/site1/mysql-deployment.yaml
 sed -i 's/replicas: 1/replicas: 0/g' wordpress/overlays/site1/wordpress-deployment.yaml
 git commit -am 'site 1 down'
@@ -19,7 +19,7 @@ git push origin master
 
 ## Bring site2 online
 ```
-cd ~/git/multisite-application/
+cd ~/git/examples-and-blogs/examples/managing-with-mirroring/multisite-application
 sed -i 's/replicas: 0/replicas: 1/g' wordpress/overlays/site2/mysql-deployment.yaml
 sed -i 's/replicas: 0/replicas: 1/g' wordpress/overlays/site2/wordpress-deployment.yaml
 git commit -am 'site 2 up'

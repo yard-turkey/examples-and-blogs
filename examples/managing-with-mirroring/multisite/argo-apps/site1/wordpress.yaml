@@ -9,8 +9,8 @@ spec:
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: wordpress/overlays/site1
-    repoURL: git@github.com:cooktheryan/multisite-application.git
+    path: managing-with-mirroring/multisite-application/wordpress/overlays/site1
+    repoURL: https://github.com/yard-turkey/examples-and-blogs.git
     targetRevision: HEAD
   syncPolicy:
     automated:

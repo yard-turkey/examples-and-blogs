@@ -19,9 +19,9 @@ Perform the following steps to create a cloudflare load balancer. This will also
 * Click Create Load Balancer
 
 
-Supply the following values for creating the load balancer
+Supply the following values for creating the load balancer replacing example.com with your FQDN
 
-wordpress.demo-sysdeseng.com
+wordpress.example.com
 ![](../images/url.png)
 
 Origin Pool
