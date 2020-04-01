@@ -14,7 +14,32 @@ git commit -am 'site 1 down'
 git push origin master
 ```
 
-## Modify the primary storage
+## Demoting and Promoting Images During Failover
+As you have seen, there is a Primary and a Secondary for Mirroring...once the Primary site goes down, it's necessary to
+`demote` Site1 image and `promote` site2 image.
+
+From Original Primary Cluster (Site1) Demote Both Images
+```
+  $ rbd mirror image demote <pool>/<image>
+  $ rbd mirror image demote replicapool/mysql-pv-claim-rook-cephc86932ee-623b-11ea-b0b1-0a580a830212
+```
+
+From Original Secondary Cluster (Site2) Promote Both Images
+```
+  $ rbd mirror image promote <pool>/<image>
+  $ rbd mirror image promote replicapool/mysql-pv-claim-rook-cephc86932ee-623b-11ea-b0b1-0a580a830212  
+```
+
+**[NOTE]** Even with a 1 minutes replication schedule, you will want at least 3 minutes between demotion and promotion to ensure the images, otherwise risk losing data from new Primary to Secondary. We have only seen this behavior on Failback to the Primary after we have already Failed Over once.
+
+**[NOTE]** To help mitigate loss of data, you can always `resync` between secondary and primary to speed up the process.
+
+- Using `resync` From current Secondary to Primary before demotion and promotion
+```
+  $ rbd mirror image resync replicapool/mysql-pv-claim-rook-cephc86932ee-623b-11ea-b0b1-0a580a830212
+```
+
+**[NOTE]** This flags the current Secondary to pull the current Primary latest information
 
 
 ## Bring site2 online

@@ -21,5 +21,8 @@ Once the correct values of the storage class has been created [ Follow the steps
 # Configure cloudflare
 Login to cloudflare and [ follow the directions here ](./load-balancing/README.md)
 
+# Mirroring
+To begin the process of mirroring the data [ Follow the steps here ](./mirroring/README.md)
+
 # Switching sites
 Perform the following steps to switch from site 1 to site 2. [ site 1 to site 2](./failover/README.md)
